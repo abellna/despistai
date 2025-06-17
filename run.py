@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, g
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import select
 from app import create_app, db, allowed_file
 from app.models import Item, Location
 from werkzeug.utils import secure_filename
@@ -9,7 +10,22 @@ app = create_app()
 
 @app.route('/')
 def inicio():
-    return render_template('form-item.html')
+    locations = Location.query.all()
+    return render_template('form-item.html', locations=locations)
+
+@app.route('/api/locations/<int:location_id>', methods=['GET'])
+def get_location_by_id(location_id):
+    location = Location.query.get(location_id)
+
+    return jsonify({
+        'success': True,
+        'location': {
+            'id': location.id,
+            'nameLocation': location.nameLocation,
+            'imageLocation': location.imageLocation,
+            'descLocation': location.descLocation
+        }
+    }), 200
 
 # @app.route('/form-item')
 # def form_item():
@@ -54,7 +70,7 @@ def crear_ubicacion():
     
     new_location = Location(
         nameLocation=nameLocation,
-        imageLocation=save_path,
+        imageLocation=filename,
         descLocation=descLocation
     )
 

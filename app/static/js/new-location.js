@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!nameLocation || !imageLocationFile) {
             alert('Por favor, completa los campos: Nombre de la ubicación e Imagen de la ubicación.');
             return;
-        }
+        }     
 
         const formData = new FormData();
         formData.append('nameLocation', nameLocation);

@@ -21,3 +21,12 @@ class Location(db.Model):
     fecha = db.Column(db.DateTime, default=datetime.now(timezone.utc))
 
     items = db.relationship('Item', backref='location', lazy=True)
+
+    #Esto sirve para serializar el objeto Location a un diccionario, en caso de que quiera hacerlo
+    # def to_dict(self):
+    #     return {
+    #         'id': self.id,
+    #         'name': self.name,
+    #         'description': self.description,
+    #         'image': self.image
+    #     }
