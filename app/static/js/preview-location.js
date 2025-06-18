@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     imgPreview = document.getElementById('location-file-preview');
                     descPreview = document.getElementById('location-description-preview');
 
-                    imgPreview.src = 'static/uploads/' + data.location.imageLocation;
+                    imgPreview.src = 'static/uploads/locations/' + data.location.imageLocation;
                     imgPreview.style.display = 'block';
                     descPreview.value = data.location.descLocation;
                     descPreview.readOnly = true;

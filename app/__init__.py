@@ -10,8 +10,11 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
 
-    if not os.path.exists(os.path.join('app', 'static', 'uploads')):
-        os.makedirs(os.path.join('app', 'static', 'uploads'))
+    if not os.path.exists(os.path.join('app', 'static', 'uploads', 'locations')):
+        os.makedirs(os.path.join('app', 'static', 'uploads', 'locations'))
+
+    if not os.path.exists(os.path.join('app', 'static', 'uploads', 'items')):
+        os.makedirs(os.path.join('app', 'static', 'uploads', 'items'))
 
     basedir = os.path.abspath(os.path.dirname(__file__))
     db_path = os.path.join(basedir, '.', 'instance', 'app.db')

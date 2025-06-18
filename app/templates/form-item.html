@@ -7,14 +7,14 @@
     <title>Nuevo objeto</title>
 </head>
 <body>
-    <form action="/add" method="post" class="container mt-5" enctype="multipart/form-data">
+    <form action="/crear-item" method="post" class="container mt-5" enctype="multipart/form-data">
         <div class="form-group">
             <label for="itemName">Nombre del objeto:</label>
-            <input type="text" class="form-control" id="itemName" name="itemName" required>
+            <input type="text" class="form-control" id="item-name" name="itemName" required>
             <label for="itemImage">Foto o imagen del objeto:</label>
-            <input type="file" class="form-control-file" id="itemImage" name="itemImage" accept="image/*" required>
+            <input type="file" class="form-control-file" id="item-image" name="itemImage" accept="image/*" required>
             <label for="itemDescription">Descripción del objeto:</label>
-            <textarea class="form-control" id="itemDescription" name="itemDescription" rows="3"></textarea>
+            <textarea class="form-control" id="item-description" name="itemDescription" rows="3"></textarea>
             <label for="itemLocation">Ubicación del objeto:</label>
             <select name="itemLocation" id="location-select" required>
                 <option value="" selected>-- Selecciona una ubicación --</option>
@@ -29,25 +29,24 @@
                 <label for="locationDescription">Descripción de la ubicación:</label>
                 <textarea class="form-control" id="location-description-preview" name="locationDescription" rows="3"></textarea>
             </div>
-            
-            <!-- Modal emergente -->
-            <form id="new-location-form" enctype="multipart/form-data">
-                <div id="new-location-modal" class="form-group" style="display:none; position: fixed; background: #fff; border: 1px solid #ccc; padding: 1rem;">
-                    <label for="nameNewLocationInput">Nombre de la ubicación:</label>
-                    <input type="text" id="name-new-location-input" name="nameNewLocationInput" class="form-control" required>
-                    <label for="imageNewLocationInput">Foto de la ubicación:</label>
-                    <input type="file" class="form-control-file" id="image-new-location-input" name="imageNewLocationInput" accept="image/*" required>
-                    <label for="descNewLocationInput">Descripción de la ubicación:</label>
-                    <textarea class="form-control" id="desc-new-location-input" name="descNewLocationInput" rows="3"></textarea>
-                    <button id="save-location-button">Guardar</button>
-                    <button onclick="cerrarModal()">Cancelar</button>
-                </div>
-            </form>
-            <button type="submit" class="btn btn-primary">Agregar objeto</button>
+            <button id="save-item-button" type="submit" class="btn btn-primary">Agregar objeto</button>
+            <div id="item-error-message" class="alert alert-danger mt-3" style="display:none;"></div>
+        </div>
+    </form>
+    <form id="new-location-form" enctype="multipart/form-data">
+        <div id="new-location-modal" class="form-group" style="display:none; position: fixed; background: #fff; border: 1px solid #ccc; padding: 1rem;">
+            <label for="nameNewLocationInput">Nombre de la ubicación:</label>
+            <input type="text" id="name-new-location-input" name="nameNewLocationInput" class="form-control" required>
+            <label for="imageNewLocationInput">Foto de la ubicación:</label>
+            <input type="file" class="form-control-file" id="image-new-location-input" name="imageNewLocationInput" accept="image/*" required>
+            <label for="descNewLocationInput">Descripción de la ubicación:</label>
+            <textarea class="form-control" id="desc-new-location-input" name="descNewLocationInput" rows="3"></textarea>
+            <button id="save-location-button">Guardar</button>
+            <button onclick="cerrarModal()">Cancelar</button>
         </div>
     </form>
     <script src="{{ url_for('static', filename='js/new-location.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/location-preview.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/preview-location.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

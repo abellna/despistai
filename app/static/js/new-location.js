@@ -43,15 +43,23 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 const data = await response.json();
                 alert('Ubicación guardada exitosamente');
-
-                console.log("datos " + data);
                 
                 const option = document.createElement('option');
+                const imgPreview = document.getElementById('location-file-preview');
+                const descPreview = document.getElementById('location-description-preview');
+                const divPreview = document.getElementById('div-preview-location');
+
                 option.value = data.location_id;
                 option.textContent = data.nameLocation;
                 select.insertBefore(option, select.lastElementChild);
                 select.value = data.location_id;
                 newLocDiv.style.display = 'none';
+
+                divPreview.style.display = 'block';
+                imgPreview.src = 'static/uploads/locations/' + data.imageLocation;
+                imgPreview.style.display = 'block';
+                descPreview.value = data.descLocation;
+                descPreview.readOnly = true;
             }
 
         } catch (error) {

@@ -1,7 +1,6 @@
-from flask import Flask, render_template, request, jsonify, g
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import select
-from app import create_app, db, allowed_file
+from flask import render_template, request, jsonify
+from sqlalchemy.exc import SQLAlchemyError
+from app import create_app, db
 from app.models import Item, Location
 from werkzeug.utils import secure_filename
 import os
@@ -15,7 +14,7 @@ def inicio():
 
 @app.route('/api/locations/<int:location_id>', methods=['GET'])
 def get_location_by_id(location_id):
-    location = Location.query.get(location_id)
+    location = db.session.get(Location, location_id)
 
     return jsonify({
         'success': True,
@@ -31,28 +30,39 @@ def get_location_by_id(location_id):
 # def form_item():
 #     return render_template('form-item.html')
 
-@app.route('/guardar-item', methods=['POST'])
+@app.route('/crear-item', methods=['POST'])
 def guardar_item():
-    itemName = request.form.get('itemName')
-    itemImage = request.form.get('itemImage')
-    itemDescription = request.form.get('itemDescription')
-    itemLocation = request.form.get('itemLocation')
-    imageLocation = request.form.get('imageLocation')
-    descLocation = request.form.get('descLocation')
-    idLocation = request.form.get('idLocation')
+    itemName = request.form['itemName']
+    itemImage = request.files['itemImage']
+    itemDescription = request.form['itemDescription']
+    idLocation = request.form['itemLocation']
 
-    itemAndLocation = Item(
+    if not itemName or not itemImage:
+        return jsonify({'error': 'Missing required fields'}), 400
+    
+    filename = secure_filename(itemImage.filename)
+    save_path = os.path.join(app.config['UPLOAD_FOLDER'], 'items', filename)
+
+    itemImage.save(save_path)
+    
+    new_item = Item(
         itemName=itemName,
-        itemImage=itemImage,
+        itemImage=filename,
         itemDescription=itemDescription,
-        itemLocation=itemLocation,
-        imageLocation=imageLocation,
-        descLocation=descLocation,
-        idLocation=idLocation
+        location_id=idLocation
     )
 
-    db.session.add(itemAndLocation)
+    db.session.add(new_item)
     db.session.commit()
+
+    jsonify({'success': True,
+                'item_id': new_item.id,
+                'itemName': new_item.itemName,
+                'itemImage': new_item.itemImage,
+                'itemDescription': new_item.itemDescription,
+                'location_id': new_item.location_id}), 201
+    
+    return render_template('view-item.html', item=new_item)
 
 @app.route('/crear-ubicacion', methods=['POST'])
 def crear_ubicacion():
@@ -64,7 +74,7 @@ def crear_ubicacion():
         return jsonify({'error': 'Missing required fields'}), 400
     
     filename = secure_filename(imageLocation.filename)
-    save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    save_path = os.path.join(app.config['UPLOAD_FOLDER'], 'locations', filename)
 
     imageLocation.save(save_path)
     
