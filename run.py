@@ -1,5 +1,6 @@
 from flask import render_template, request, jsonify
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import select
 from app import create_app, db
 from app.models import Item, Location
 from werkzeug.utils import secure_filename
@@ -55,14 +56,10 @@ def guardar_item():
     db.session.add(new_item)
     db.session.commit()
 
-    jsonify({'success': True,
-                'item_id': new_item.id,
-                'itemName': new_item.itemName,
-                'itemImage': new_item.itemImage,
-                'itemDescription': new_item.itemDescription,
-                'location_id': new_item.location_id}), 201
+    selectLocation = select(Location).where(Location.id == idLocation)
+    resultLocation = db.session.execute(selectLocation).scalar_one_or_none()
     
-    return render_template('view-item.html', item=new_item)
+    return render_template('view-item.html', item=new_item, location=resultLocation)
 
 @app.route('/crear-ubicacion', methods=['POST'])
 def crear_ubicacion():
